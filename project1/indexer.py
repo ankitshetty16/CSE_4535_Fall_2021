@@ -44,13 +44,13 @@ class Indexer:
         Define all the fields that are to be indexed in the core. Refer to the project doc for more details
         :return:
         '''
+# {
+# "name": "id",
+# "type": "string",
+# "multiValued": False
+# },
         data = {
             "add-field": [
-                {
-                    "name": "id",
-                    "type": "string",
-                    "multiValued": False
-                },
                 {
                     "name": "country",
                     "type": "string",
