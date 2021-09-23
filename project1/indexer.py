@@ -11,7 +11,7 @@ import requests
 
 
 CORE_NAME = "IRF21P1"
-AWS_IP = "localhost"
+AWS_IP = "13.58.241.13"
 
 
 # [CAUTION] :: Run this script once, i.e. during core creation
@@ -44,11 +44,11 @@ class Indexer:
         Define all the fields that are to be indexed in the core. Refer to the project doc for more details
         :return:
         '''
-# {
-# "name": "id",
-# "type": "string",
-# "multiValued": False
-# },
+        # {
+        # "name": "id",
+        # "type": "string",
+        # "multiValued": False
+        # },
         data = {
             "add-field": [
                 {

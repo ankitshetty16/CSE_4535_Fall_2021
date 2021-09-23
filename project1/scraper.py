@@ -94,10 +94,10 @@ def main():
                 processed = TWPreprocessor.preprocess(tw,{})
                 if processed != {}:
                     processed_tweets.append(processed)
-                    records = _update_records(records, processed['tweet_lang'], processed['country'])
+                    # records = _update_records(records, processed['tweet_lang'], processed['country'])
 
             indexer.create_documents(processed_tweets)
-
+            print(len(processed))
             keywords[i]["finished"] = 1
             keywords[i]["collected"] = len(processed_tweets)
 

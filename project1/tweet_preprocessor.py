@@ -24,20 +24,25 @@ class TWPreprocessor:
         if raw['lang'] not in valid_languages:
             return {};
         dict = {}
-        dict['poi_name'] = raw['user']['screen_name']
-        dict['poi_id'] = raw['user']['id']
         dict['verified'] = raw['user']['verified']
         if(len(poi)):
+            dict['poi_id'] = raw['user']['id']
+            dict['poi_name'] = raw['user']['screen_name']
             dict['country'] = poi['country']
         else:
             dict['country'] =   country[raw['lang']]  
         dict['id'] = raw['id_str']
         if len(poi):
-            cleansedText = _text_cleaner(raw['full_text']);
-            dict['tweet_text'] = raw['full_text']
+            text= ''
+            if 'full_text' in raw:
+                text = raw['full_text']
+            else:
+                text = raw['text']
+            cleansedText = _text_cleaner(text);
+            dict['tweet_text'] = text
         else:
-            cleansedText = _text_cleaner(raw['text']);
-            dict['tweet_text'] = raw['text']
+            cleansedText = _text_cleaner(raw['full_text'])
+            dict['tweet_text'] = raw['full_text']
         dict['tweet_lang'] = raw['lang']
         dict['text_'+raw['lang']] = cleansedText[0]
         if len(_get_entities(raw,'hashtags')):
@@ -49,13 +54,15 @@ class TWPreprocessor:
         if len(cleansedText[1]):    
             dict['tweet_emoticons'] = cleansedText[1]
         dict['tweet_date'] = str(_get_tweet_date(raw['created_at']))
-        if raw['geo'] != None:
-            dict['geolocation'] = raw['geo']
+        if raw['geo'] != None and raw['geo']['coordinates']:
+            dict['geolocation'] = raw['geo']['coordinates']
 
         ### For Replies
-        # dict['replied_to_tweet_id'] = raw['']           # pending
-        # dict['replied_to_user_id'] = raw['']            # pending
-        # dict['reply_text'] = raw['']                    # pending
+        # print(raw['in_reply_to_user_id_str'])
+        # if raw['in_reply_to_user_id_str']:
+        #     # dict['replied_to_tweet_id'] = raw['']           # pending
+        #     # dict['replied_to_user_id'] = raw['']            # pending
+        #     # dict['reply_text'] = raw['']                    # pending
         
         return dict;
 
