@@ -10,8 +10,8 @@ import requests
 # https://tecadmin.net/install-apache-solr-on-ubuntu/
 
 
-CORE_NAME = "IRF21P1"
-AWS_IP = "13.58.241.13"
+CORE_NAME = "IRF21P1-reply"
+AWS_IP = "localhost"
 
 
 # [CAUTION] :: Run this script once, i.e. during core creation
