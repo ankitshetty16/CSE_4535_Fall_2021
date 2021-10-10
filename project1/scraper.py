@@ -10,13 +10,13 @@ from twitter import Twitter
 from tweet_preprocessor import TWPreprocessor
 from indexer import Indexer
 
-reply_collection_knob = False
+reply_collection_knob = True
 
 def read_records():
     with open("records.json") as json_file:
         data = json.load(json_file)
 
-    return data
+    return data['counter']
 
 def write_records(data):
     with open("records.json", 'w') as json_file:
@@ -43,9 +43,9 @@ def read_file(type, id):
     return pd.read_pickle(f"data/{type}_{id}.pkl")
 
 def _update_records(records, lang, country):
-    records['counter'][lang] = records['counter'][lang] + 1
-    records['counter'][country] = records['counter'][country] + 1
-    records['counter']['total'] = records['counter']['total'] +  1
+    records[lang] = records[lang] + 1
+    records[country] = records[country] + 1
+    records['total'] = records['total'] +  1
 
     return records;
 
@@ -94,10 +94,10 @@ def main():
                 processed = TWPreprocessor.preprocess(tw,{})
                 if processed != {}:
                     processed_tweets.append(processed)
-                    # records = _update_records(records, processed['tweet_lang'], processed['country'])
+                    records = _update_records(records, processed['tweet_lang'], processed['country'])
 
             indexer.create_documents(processed_tweets)
-            print(len(processed))
+
             keywords[i]["finished"] = 1
             keywords[i]["collected"] = len(processed_tweets)
 
@@ -114,8 +114,58 @@ def main():
 
     if reply_collection_knob:
         # Write a driver logic for reply collection, use the tweets from the data files for which the replies are to collected.
+        for i in range(len(pois)):
+                if pois[i]["reply_finished"] == 0:
+                    print(f"---------- collecting replies for POI: {pois[i]['screen_name']}")
 
-        raise NotImplementedError
+                    raw_tweets = twitter.get_replies(pois[i])
+                    processed_tweets = []
+                    for tw in raw_tweets:
+                        processed = TWPreprocessor.preprocess(tw, pois[i],True)
+                        if processed != {}:
+                            print(">>>>>>>>>>>>>>>FOR REPLIES>>>>>>>>>>>>>>")
+                            print(processed)
+                            processed_tweets.append(processed)
+                            records = _update_records(records, processed['tweet_lang'], processed['country'])
+                    indexer.create_documents(processed_tweets)
+
+                    pois[i]["reply_finished"] = 1
+
+                    write_config({
+                        "pois": pois, "keywords": keywords
+                    })
+                    write_records({
+                        "counter": records
+                    })
+
+                    save_file(processed_tweets, f"replies_poi_{pois[i]['id']}.pkl")
+
+                    print(len(processed_tweets)+' replies collected for POI -> '+str(pois[i]['id']))     
+                    print("------------ process complete -----------------------------------")
+       
+        ### KEYWORD related NON POI REPLIES
+    
+        print("---------- collecting replies for Keywords related NON POIs-------")
+
+        raw_tweets = twitter.get_replies({})
+        processed_tweets = []
+        for tw in raw_tweets:
+            processed = TWPreprocessor.preprocess(tw, {},True)
+            if processed != {}:
+                print(">>>>>>>>>>>>>>>FOR KEYWORD REPLIES>>>>>>>>>>>>>>")
+                processed_tweets.append(processed)
+                records = _update_records(records, processed['tweet_lang'], processed['country'])
+        indexer.create_documents(processed_tweets)
+
+        write_records({
+            "counter": records
+        })
+
+        save_file(processed_tweets, f"replies_keywords.pkl")
+        print(processed_tweets)
+        print(str(len(processed_tweets))+' replies collected for KEYWORDS NON POI -> ')     
+        print("------------------------------------ process complete -----------------------------------")       
+        
 
 
 if __name__ == "__main__":

@@ -12,7 +12,7 @@ import preprocessor
 
 class TWPreprocessor:
     @classmethod
-    def preprocess(cls, tweet, poi):
+    def preprocess(cls, tweet, poi, reply=False):
         '''
         Do tweet pre-processing before indexing, make sure all the field data types are in the format as asked in the project doc.
         :param tweet:
@@ -25,14 +25,14 @@ class TWPreprocessor:
             return {};
         dict = {}
         dict['verified'] = raw['user']['verified']
-        if(len(poi)):
+        if(len(poi) and reply == False):
             dict['poi_id'] = raw['user']['id']
             dict['poi_name'] = raw['user']['screen_name']
             dict['country'] = poi['country']
         else:
             dict['country'] =   country[raw['lang']]  
         dict['id'] = raw['id_str']
-        if len(poi):
+        if (len(poi) and reply == False):
             text= ''
             if 'full_text' in raw:
                 text = raw['full_text']
@@ -58,11 +58,10 @@ class TWPreprocessor:
             dict['geolocation'] = raw['geo']['coordinates']
 
         ### For Replies
-        # print(raw['in_reply_to_user_id_str'])
-        # if raw['in_reply_to_user_id_str']:
-        #     # dict['replied_to_tweet_id'] = raw['']           # pending
-        #     # dict['replied_to_user_id'] = raw['']            # pending
-        #     # dict['reply_text'] = raw['']                    # pending
+        if raw['in_reply_to_user_id_str']:
+            dict['replied_to_tweet_id'] = raw['in_reply_to_status_id'] 
+            dict['replied_to_user_id'] = raw['in_reply_to_user_id']  
+            dict['reply_text'] = _text_cleaner(raw['full_text'])[0]
         
         return dict;
 

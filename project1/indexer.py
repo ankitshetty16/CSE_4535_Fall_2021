@@ -11,7 +11,7 @@ import requests
 
 
 CORE_NAME = "IRF21P1-reply"
-AWS_IP = "localhost"
+AWS_IP = "3.21.125.45"
 
 
 # [CAUTION] :: Run this script once, i.e. during core creation

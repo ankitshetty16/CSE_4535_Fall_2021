@@ -6,6 +6,17 @@ Institute: University at Buffalo
 import tweepy
 import json
 
+
+def read_records():
+    with open("stats.json") as json_file:
+        data = json.load(json_file)
+
+    return data
+
+def write_records(data):
+    with open("stats.json", 'w') as json_file:
+        json.dump(data, json_file) 
+
 poi_tweet_ids = {}
 tweet_ids = {}
 
@@ -31,7 +42,7 @@ class Twitter:
             'poi_covid': 50,
             'poi_gen': 500
         }
-        return meet_requirements
+        return meet_requirements     
 
     def get_tweets_by_poi_screen_name(self,poi):
         '''
@@ -41,8 +52,7 @@ class Twitter:
         tweets = []
         poi_tweet_ids[poi['id']] = []
         tweet_ids[poi['id']] = []
-        # max_id = 0
-        # keyword_index = 0
+
         keywords = [  
             "quarentena",
             "hospital",
@@ -465,7 +475,7 @@ class Twitter:
 
                     print('tweet added')
                     tweets.append(data)
-                    data._json['full_text']
+                    # data._json['full_text']
                     if poi['id'] not in poi_tweet_ids[poi['id']]:
                         poi_tweet_ids[poi['id']].append(data._json['id'])
                         tweet_ids[poi['id']].append(data._json['id'])
@@ -484,6 +494,8 @@ class Twitter:
         print(len(tweet_ids[poi['id']]))
         print('Total KEYWORD tweets collected>>>>')
         print(len(poi_tweet_ids[poi['id']]))
+        _record_data(poi_tweet_ids, 'poi')
+        
 
         return tweets;
 
@@ -497,19 +509,529 @@ class Twitter:
         print(keywords['name'])
         for data in tweepy.Cursor(self.api.search,q = keywords['name']+ "-filter:retweets",lang = keywords['lang'],count = keywords['count'],tweet_mode='extended').items(keywords['count']):
             tweets.append(data)
+
+            _record_data({"id": data._json['id'], "user": data._json['user']['screen_name']},'keyword') 
  
         return tweets        
 
-    def get_replies(self,tweet_id,poi):
+    def get_replies(self, poi):
         '''
         Get replies for a particular tweet_id, use max_id and since_id.
         For more info: https://developer.twitter.com/en/docs/twitter-api/v1/tweets/timelines/guides/working-with-timelines
         :return: List
         '''
-        replies=[]
-        for tweet in tweepy.Cursor(self.api.search,q='to:'+poi, result_type='recent', ).items(1000):
-            if hasattr(tweet, 'in_reply_to_status_id_str'):
-                if (tweet.in_reply_to_status_id_str==tweet_id):
-                    replies.append(tweet)
-        
+        print('---------------------------REPLIES STARTED')
+        replies= []
+        data = read_records()
+        records = data["stats"]
+        main_tweet = 0
+        last_id = 9999999999999999999
+
+        if(len(poi)):
+            keywords = [  
+                "quarentena",
+                "hospital",
+                "covidresources",
+                "rt-pcr",
+                "वैश्विकमहामारी",
+                "oxygen",
+                "सुरक्षित रहें",
+                "stayhomestaysafe",
+                "covid19",
+                "quarantine",
+                "मास्क",
+                "face mask",
+                "covidsecondwaveinindia",
+                "flattenthecurve",
+                "corona virus",
+                "wuhan",
+                "cierredeemergencia",
+                "autoaislamiento",
+                "sintomas",
+                "covid positive",
+                "casos",
+                "कोविड मृत्यु",
+                "स्वयं चुना एकांत",
+                "stay safe",
+                "#deltavariant",
+                "covid symptoms",
+                "sarscov2",
+                "covidiots",
+                "brote",
+                "alcohol en gel",
+                "disease",
+                "asintomático",
+                "टीकाकरण",
+                "encierro",
+                "covidiot",
+                "covidappropriatebehaviour",
+                "fever",
+                "pandemia de covid-19",
+                "wearamask",
+                "flatten the curve",
+                "oxígeno",
+                "desinfectante",
+                "super-spreader",
+                "ventilador",
+                "coronawarriors",
+                "quedate en casa",
+                "mascaras",
+                "mascara facial",
+                "trabajar desde casa",
+                "संगरोध",
+                "immunity",
+                "स्वयं संगरोध",
+                "डेल्टा संस्करण",
+                "mask mandate",
+                "health",
+                "dogajkidoori",
+                "travelban",
+                "cilindro de oxígeno",
+                "covid",
+                "staysafe",
+                "variant",
+                "yomequedoencasa",
+                "doctor",
+                "एंटीबॉडी",
+                "दूसरी लहर",
+                "distancia social",
+                "मुखौटा",
+                "covid test",
+                "अस्पताल",
+                "covid deaths",
+                "कोविड19",
+                "muvariant",
+                "susanadistancia",
+                "personal protective equipment",
+                "remdisivir",
+                "quedateencasa",
+                "asymptomatic",
+                "social distancing",
+                "distanciamiento social",
+                "cdc",
+                "transmission",
+                "epidemic",
+                "social distance",
+                "herd immunity",
+                "transmisión",
+                "सैनिटाइज़र",
+                "indiafightscorona",
+                "surgical mask",
+                "facemask",
+                "desinfectar",
+                "वायरस",
+                "संक्रमण",
+                "symptoms",
+                "सामाजिक दूरी",
+                "covid cases",
+                "ppe",
+                "sars",
+                "autocuarentena",
+                "प्रक्षालक",
+                "breakthechain",
+                "stayhomesavelives",
+                "coronavirusupdates",
+                "sanitize",
+                "covidinquirynow",
+                "कोरोना",
+                "workfromhome",
+                "outbreak",
+                "flu",
+                "sanitizer",
+                "distanciamientosocial",
+                "variante",
+                "कोविड 19",
+                "कोविड-19",
+                "covid pneumonia",
+                "कोविड",
+                "pandemic",
+                "icu",
+                "वाइरस",
+                "contagios",
+                "वेंटिलेटर",
+                "washyourhands",
+                "n95",
+                "stayhome",
+                "lavadodemanos",
+                "fauci",
+                "रोग प्रतिरोधक शक्ति",
+                "maskmandate",
+                "डेल्टा",
+                "कोविड महामारी",
+                "third wave",
+                "epidemia",
+                "fiebre",
+                "मौत",
+                "travel ban",
+                "फ़्लू",
+                "muerte",
+                "स्वच्छ",
+                "washhands",
+                "enfermedad",
+                "contagio",
+                "infección",
+                "faceshield",
+                "self-quarantine",
+                "remdesivir",
+                "oxygen cylinder",
+                "mypandemicsurvivalplan",
+                "कोविड के केस",
+                "delta variant",
+                "wuhan virus",
+                "लक्षण",
+                "corona",
+                "maskup",
+                "gocoronago",
+                "death",
+                "curfew",
+                "socialdistance",
+                "second wave",
+                "máscara",
+                "stayathome",
+                "positive",
+                "lockdown",
+                "propagación en la comunidad",
+                "तीसरी लहर",
+                "aislamiento",
+                "rtpcr",
+                "coronavirus",
+                "variante delta",
+                "distanciasocial",
+                "cubrebocas",
+                "घर पर रहें",
+                "socialdistancing",
+                "covidwarriors",
+                "प्रकोप",
+                "covid-19",
+                "stay home",
+                "संक्रमित",
+                "jantacurfew",
+                "cowin",
+                "कोरोनावाइरस",
+                "virus",
+                "distanciamiento",
+                "cuarentena",
+                "indiafightscovid19",
+                "healthcare",
+                "natocorona",
+                "मास्क पहनें",
+                "delta",
+                "ऑक्सीजन",
+                "wearmask",
+                "कोरोनावायरस",
+                "ventilator",
+                "pneumonia",
+                "maskupindia",
+                "ppe kit",
+                "sars-cov-2",
+                "testing",
+                "fightagainstcovid19",
+                "महामारी",
+                "नियंत्रण क्षेत्र",
+                "who",
+                "mask",
+                "pandemia",
+                "deltavariant",
+                "वैश्विक महामारी",
+                "रोग",
+                "síntomas",
+                "work from home",
+                "antibodies",
+                "masks",
+                "confinamiento",
+                "flattening the curve",
+                "मुखौटा जनादेश",
+                "thirdwave",
+                "mascarilla",
+                "usacubrebocas",
+                "covidemergency",
+                "inmunidad",
+                "cierre de emergencia",
+                "self-isolation",
+                "स्वास्थ्य सेवा",
+                "सोशल डिस्टन्सिंग",
+                "isolation",
+                "cases",
+                "community spread",
+                "unite2fightcorona",
+                "oxygencrisis",
+                "containment zones",
+                "homequarantine",
+                "स्पर्शोन्मुख",
+                "लॉकडाउन",
+                "hospitalización",
+                "incubation period",
+                "anticuerpos",
+                "vaccine mandate",
+                "eficacia de la vacuna",
+                "vacuna covid",
+                "covidvaccine",
+                "zycov-d",
+                "vaccines",
+                "#largestvaccinedrive",
+                "vaccination",
+                "dosis de vacuna",
+                "moderna",
+                "campaña de vacunación",
+                "vaccineshortage",
+                "vacunar",
+                "covid vaccine",
+                "efectos secundarios de la vacuna",
+                "कोविशील्ड",
+                "hydroxychloroquine",
+                "efficacy",
+                "टीके",
+                "टीकाकरण",
+                "वैक्सीनेशन",
+                "shots",
+                "covishield",
+                "vaccine",
+                "antibody",
+                "j&j vaccine",
+                "booster shot",
+                "वैक्सीन पासपोर्ट",
+                "covidvaccination",
+                "दूसरी खुराक",
+                "inyección de refuerzo",
+                "astrazeneca",
+                "टीकाकरण अभियान",
+                "vacunacovid19",
+                "johnson & johnson",
+                "पहली खुराक",
+                "sinopharm",
+                "immunity",
+                "vaccination drive",
+                "inmunización",
+                "vaccine dose",
+                "we4vaccine",
+                "पूर्ण टीकाकरण",
+                "vaccine passports",
+                "एंटीबॉडी",
+                "vacunado",
+                "vacunarse",
+                "johnson",
+                "efecto secundario",
+                "astra zeneca",
+                "yomevacunoseguro",
+                "injection",
+                "cdc",
+                "वैक्सीन के साइड इफेक्ट",
+                "getvaxxed",
+                "teeka",
+                "टीका",
+                "herd immunity",
+                "वैक्सीन जनादेश",
+                "vaccinepassports",
+                "estrategiadevacunación",
+                "ivermectin",
+                "cansino",
+                "vacunas",
+                "vaccinehesitancy",
+                "sputnik",
+                "johnson & johnson’s janssen",
+                "unvaccinated",
+                "janssen",
+                "sputnik v",
+                "vacunaton",
+                "seconddose",
+                "कोवेक्सिन",
+                "getvaccinatednow",
+                "tikakaran",
+                "कोविशिल्ड",
+                "खुराक",
+                "covaxine",
+                "mrna",
+                "first dose",
+                "वाइरस",
+                "booster shots",
+                "dosis",
+                "side effect",
+                "रोग प्रतिरोधक शक्ति",
+                "jab",
+                "get vaccinated",
+                "vaccinessavelives",
+                "pinchazo",
+                "vaccinesideeffects",
+                "vaccinated",
+                "कोविड का टीका",
+                "खराब असर",
+                "vacunación",
+                "कोवैक्सिन",
+                "tikautsav",
+                "efectos secundarios",
+                "remdesivir",
+                "covid19vaccine",
+                "eficacia",
+                "anticuerpo",
+                "vaccinequity",
+                "vaccinesamvaad",
+                "फाइजर",
+                "vaccinesamvad",
+                "covid-19 vaccine",
+                "pasaporte de vacuna",
+                "largestvaccinationdrive",
+                "firstdose",
+                "doses",
+                "vacuna",
+                "la inmunidad de grupo",
+                "कोवैक्सीन",
+                "vaccine side effects",
+                "कोविन",
+                "vaccinationdrive",
+                "clinical trial",
+                "vaccinemandate",
+                "segunda dosis",
+                "cowin",
+                "vaccinate",
+                "clinical trials",
+                "fully vaccinated",
+                "johnson and johnson",
+                "primera dosis",
+                "largestvaccinedrive",
+                "vaccine hesitancy",
+                "वैक्सीन",
+                "प्रभाव",
+                "vacunacion",
+                "second dose",
+                "sabkovaccinemuftvaccine",
+                "लसीकरण",
+                "vaccineswork",
+                "वैक्‍सीन",
+                "दुष्प्रभाव",
+                "pfizer",
+                "vaccine efficacy",
+                "टीका लगवाएं",
+                "एमआरएनए वैक्सीन",
+                "antibodies",
+                "getvaccinated",
+                "covidshield",
+                "booster",
+                "टीका_जीत_का",
+                "vaccine jab",
+                "vaccine passport",
+                "vaccinepassport",
+                "mrna vaccine",
+                "inmunidad",
+                "एस्ट्राजेनेका",
+                "mandato de vacuna",
+                "astrazenca",
+                "vacúnate",
+                "vacuna para el covid-19",
+                "vacunada",
+                "side effects",
+                "dose",
+                "novavax",
+                "j&j",
+                "covaxin",
+                "fullyvaccinated",
+                "sputnikv",
+                "कोविड टीका",
+                "completamente vacunado",
+                "novaccinepassports",
+                "sinovac"  
+            ]
+            TW_ID = {}
+            TW_ID[poi['id']] = []
+
+            for data in tweepy.Cursor(self.api.user_timeline, screen_name = poi['screen_name'], count = 1000, tweet_mode='extended', include_rts=False).items(1000):
+                if data._json['id'] not in TW_ID[poi['id']] and any(keyword in data._json['full_text'] for keyword in keywords) and len(TW_ID[poi['id']]) < 50:
+                    print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<NEW>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+                    matching = [keyword for keyword in keywords if keyword in data._json['full_text']]
+                    print('Tweet with keyword found')
+                    print(matching)
+
+                    if poi['id'] not in TW_ID[poi['id']]:
+                        TW_ID[poi['id']].append(data._json['id'])
+
+                    print('Searching for replies>>>>>>>>>>>>')
+                    attempts = 0
+                    counter = 0
+                    for tweet in tweepy.Cursor(self.api.search,q='to:'+poi['screen_name'], result_type='recent',since_id=data._json['id'], max_id=last_id, tweet_mode='extended').items(1000):
+                        attempts = attempts+1
+                        last_id = min(tweet.id,last_id)
+
+                        if(last_id <= data._json['id']):
+                                print('minimum id reached. moving on>>>')
+                                break
+    
+                        if hasattr(tweet, 'in_reply_to_status_id_str'):
+                            if (tweet.in_reply_to_status_id_str==str(data._json['id'])):
+                                replies.append(tweet)
+                                print('Reply found')
+                                counter = counter+1
+                                _record_data({},'reply-poi')
+                            if(counter >= 10):
+                                main_tweet = main_tweet + 1
+                                print(len(replies))
+                                print('Going to next!!!!!!!!!!!!!!!!!!!!!')
+                                break;
+                    print(f"Checked {attempts} for {poi['screen_name']} ->{str(data._json['id'])} ")                
+                    if(main_tweet >= 350):
+                        break                                        
+
+
+            # poi_tweet_ids = records["poi_reply_tw"][str(poi["id"])]
+            # for tid in poi_tweet_ids:
+            #     attempts = 0
+            #     counter = 0
+            #     for tweet in tweepy.Cursor(self.api.search,q='to:'+poi['screen_name'], result_type='recent',since_id=tid, max_id=last_id, tweet_mode='extended').items(1000):
+            #         attempts = attempts+1
+            #         last_id = min(tweet.id,last_id)
+
+            #         if(last_id <= tid):
+            #                 print('minimum id reached. moving on>>>')
+            #                 break
+   
+            #         if hasattr(tweet, 'in_reply_to_status_id_str'):
+            #             if (tweet.in_reply_to_status_id_str==str(tid)):
+            #                 replies.append(tweet)
+            #                 print('Reply found')
+            #                 counter = counter+1
+            #                 _record_data({},'reply-poi')
+            #             if(counter >= 10):
+            #                 main_tweet = main_tweet + 1
+            #                 print(len(replies))
+            #                 print('Going to next!!!!!!!!!!!!!!!!!!!!!')
+            #                 break;
+            #     print(f"Checked {attempts} for {poi['screen_name']} ->{str(tid)} ")                
+            #     if(main_tweet >= 350):
+            #         break
+            
+            ###commenting
+        # elif(len(records["key_reply_tw"])):
+        #     key_tweet_ids = records["key_reply_tw"]
+        #     counter = 0
+        #     for tid in key_tweet_ids:
+        #         for tweet in tweepy.Cursor(self.api.search,q='to:'+tid['user'], result_type='recent', since_id=tid['id'], tweet_mode='extended').items(1000):
+        #             limit = 0
+        #             if hasattr(tweet, 'in_reply_to_status_id_str'):
+        #                 if (tweet.in_reply_to_status_id_str==str(tid['id'])):
+        #                     replies.append(tweet)
+        #                     print('Reply found')
+        #                     counter = counter+1
+        #                     limit = limit+1
+        #                     print(len(replies))
+        #                     _record_data({},'reply-key')
+        #                     if(counter < 1600 and limit >= 10):
+        #                         break
+        #         if(counter >= 10500):
+        #             break            
+
+        print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'+ str(len(replies))+ ' Replies found for all tweets>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
         return replies
+
+def _record_data(list, type):
+    data = read_records()
+    records = data["stats"]
+    if(type == 'poi'):
+        records["poi_reply_tw"] = list
+    elif(type == 'keyword'):
+        records["key_reply_tw"].append(list)
+    elif(type == 'reply-poi'):
+        records["poi_reply_count"] = records["poi_reply_count"] + 1  
+    elif(type == 'reply-key'):
+        records["key_reply_count"] = records["key_reply_count"] + 1          
+
+    write_records({
+        "stats": records
+    })          
