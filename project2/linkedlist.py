@@ -81,21 +81,7 @@ class LinkedList:
             if p2 is not None:
                 p1.skip_pointer = p2
                 # print("Node 2 doc value: " + str(p2.value))  
-                p1 = p2
-
-            # print('My current>>>>',current)
-            # print('My length>>>>',self.length)
-            # for i in range(n_skips,0):
-            #     if p2 is not None:
-            #         p2 = p2.next                
-            # if p2 is not None:
-            #     p1.skip_pointer = p2
-            #     p1 = p2
-            # current = current + n_skips
-            # print('current pointer>>>>',current)
-        
-
-        print('************DONE*******************************')
+                p1 = p2        
 
 
     def insert_at_end(self, value):
@@ -166,11 +152,11 @@ class LinkedList:
         n = self.start_node
         while n is not None:
             doc_id = n.value
-            print('My document id is >',doc_id,'corpus_length>>',corpus_length)
+            # print('My document id is >',doc_id,'corpus_length>>',corpus_length)
             tf = n.tf/freq_list[doc_id]
             idf = corpus_length/self.length
             n.score = tf*idf
-            print('SCORE->>>',n.score)
+            # print('SCORE->>>',n.score)
             n = n.next
 
     def print_linklist(self):

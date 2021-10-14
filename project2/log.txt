@@ -1,0 +1,12 @@
+[nltk_data] Downloading package stopwords to
+[nltk_data]     /Users/ankitshetty/nltk_data...
+[nltk_data]   Package stopwords is already up-to-date!
+  0%|          | 0/5000 [00:00<?, ?it/s]  8%|▊         | 414/5000 [00:00<00:01, 4135.00it/s] 17%|█▋        | 828/5000 [00:00<00:01, 4067.98it/s] 25%|██▍       | 1235/5000 [00:00<00:00, 3913.88it/s] 33%|███▎      | 1627/5000 [00:00<00:00, 3563.27it/s] 40%|███▉      | 1988/5000 [00:00<00:00, 3321.02it/s] 46%|████▋     | 2324/5000 [00:00<00:00, 3107.93it/s] 53%|█████▎    | 2639/5000 [00:00<00:00, 2925.29it/s] 59%|█████▊    | 2935/5000 [00:00<00:00, 2755.56it/s] 64%|██████▍   | 3213/5000 [00:01<00:00, 2377.36it/s] 69%|██████▉   | 3459/5000 [00:01<00:00, 2302.26it/s] 74%|███████▍  | 3694/5000 [00:01<00:00, 2244.64it/s] 78%|███████▊  | 3922/5000 [00:01<00:00, 2172.49it/s] 83%|████████▎ | 4141/5000 [00:01<00:00, 2103.01it/s] 87%|████████▋ | 4352/5000 [00:01<00:00, 2042.25it/s] 91%|█████████ | 4557/5000 [00:01<00:00, 1960.02it/s] 95%|█████████▌| 4754/5000 [00:01<00:00, 1834.78it/s] 99%|█████████▉| 4939/5000 [00:02<00:00, 1750.53it/s]100%|██████████| 5000/5000 [00:02<00:00, 2410.04it/s]
+ * Serving Flask app 'run_project' (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: off
+ * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+ * Running on http://192.168.1.218:9999/ (Press CTRL+C to quit)

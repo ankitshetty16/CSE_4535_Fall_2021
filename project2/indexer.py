@@ -23,7 +23,6 @@ class Indexer:
         """ This function adds each tokenized document to the index. This in turn uses the function add_to_index
             Already implemented."""
         self.doc_token_freq[doc_id] = len(tokenized_document)
-        print(self.doc_token_freq[doc_id])
         for t in tokenized_document:
             self.add_to_index(t, doc_id)
 
@@ -37,16 +36,16 @@ class Indexer:
             linked_list = LinkedList()
             linked_list.insert_at_end(doc_id_)
             self.inverted_index[term_] = linked_list
-            print('NEW TERM->>>>>>>>>>>>>>>>>>>>>'+term_)
+            # print('NEW TERM->>>>>>>>>>>>>>>>>>>>>'+term_)
             # print(linked_list.print_linklist())
         
         else:
             # for existing entry in inverted index
             linked_list = self.inverted_index[term_]
             value = linked_list.tf_increment(doc_id_)
-            if(value == -1):
+            if(value < 0):
                 linked_list.insert_at_end(doc_id_)
-            print('EXISTING TERM->>>>>>>>>>>>>>>>>>>>>'+term_)
+            # print('EXISTING TERM->>>>>>>>>>>>>>>>>>>>>'+term_)
             # print(linked_list.print_linklist())
 
     def sort_terms(self):
@@ -68,7 +67,7 @@ class Indexer:
         """ Calculate tf-idf score for each document in the postings lists of the index.
             To be implemented."""
         for item in self.inverted_index:
-            print('calculated tf_idf')
+            # print('calculated tf_idf')
             self.inverted_index[item].cal_tf_idf(self.doc_token_freq,total_length)
 
     def get_postings(self,term,skip):
