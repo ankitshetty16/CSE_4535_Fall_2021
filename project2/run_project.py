@@ -115,8 +115,9 @@ class ProjectRunner:
                     The below code formats your result to the required format.
                     To be implemented."""
 
-                output_dict['postingsList'][term] = postings
-                output_dict['postingsListSkip'][term] = skip_postings
+                output_dict['postingsList'][term] = self._output_formatter(postings)
+                # print(output_dict['postingsList'][term])
+                output_dict['postingsListSkip'][term] = self._output_formatter((skip_postings))
 
             # raise NotImplementedError
             and_op_no_skip, and_op_skip, and_op_no_skip_sorted, and_op_skip_sorted = None, None, None, None
@@ -174,6 +175,7 @@ def execute_query():
         "time_taken": str(time.time() - start_time),
         "username_hash": username_hash
     }
+    print(flask.jsonify(response))
     return flask.jsonify(response)
 
 
@@ -191,7 +193,7 @@ if __name__ == "__main__":
     argv = parser.parse_args()
     corpus = argv.corpus
     output_location = argv.output_location
-    print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<REACHED HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+
     username_hash = hashlib.md5(argv.username.encode()).hexdigest()
 
     """ Initialize the project runner"""
