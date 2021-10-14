@@ -26,4 +26,12 @@ class Preprocessor:
         """ Implement logic to pre-process & tokenize document text.
             Write the code in such a way that it can be re-used for processing the user's query.
             To be implemented."""
-        raise NotImplementedError
+        tokensList = []
+        cleansedText = ''
+        cleansedText = re.sub("[^A-Za-z0-9]+", ' ', text.lower()).strip()
+        for token in cleansedText.split(" "):
+            if(token not in self.stop_words):
+                stemmedToken = self.ps.stem(token)
+                tokensList.append(stemmedToken)
+
+        return tokensList

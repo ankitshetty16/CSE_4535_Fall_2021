@@ -8,13 +8,16 @@ import math
 
 class Node:
 
-    def __init__(self, value=None, next=None):
+    def __init__(self, value=None,tf=None, next=None):
         """ Class to define the structure of each node in a linked list (postings list).
             Value: document id, Next: Pointer to the next node
             Add more parameters if needed.
             Hint: You may want to define skip pointers & appropriate score calculation here"""
         self.value = value
+        self.tf = tf
         self.next = next
+        self.skip_pointers = None
+        self.score  = 0.0
 
 
 class LinkedList:
@@ -34,7 +37,10 @@ class LinkedList:
         else:
             """ Write logic to traverse the linked list.
                 To be implemented."""
-            raise NotImplementedError
+            node = self.start_node
+            while node is not None:
+                traversal.append(node.value)
+                node = node.next
             return traversal
 
     def traverse_skips(self):
@@ -44,7 +50,10 @@ class LinkedList:
         else:
             """ Write logic to traverse the linked list using skip pointers.
                 To be implemented."""
-            raise NotImplementedError
+            node = self.start_node
+            while node is not None:
+                traversal.append(node.value)
+                node = node.skip_pointers
             return traversal
 
     def add_skip_connections(self):
@@ -54,12 +63,126 @@ class LinkedList:
         """ Write logic to add skip pointers to the linked list. 
             This function does not return anything.
             To be implemented."""
-        raise NotImplementedError
+        self.skip_length = (int)(round(math.sqrt(self.length), 0))
+        if(n_skips < 2):
+            return
+        # print('Total length = ' + str(self.length))
+        # print('Skip length = ' + str(self.skip_length))
+        p1 = self.start_node
+        p2 = self.start_node
+        while p1 is not None and p2 is not None:
+            current = 0
+            while p2 is not None and current < self.skip_length:
+                current = current + 1
+                p2 = p2.next
+                if (p2 is None):
+                    break
+                      
+            if p2 is not None:
+                p1.skip_pointer = p2
+                # print("Node 2 doc value: " + str(p2.value))  
+                p1 = p2
+
+            # print('My current>>>>',current)
+            # print('My length>>>>',self.length)
+            # for i in range(n_skips,0):
+            #     if p2 is not None:
+            #         p2 = p2.next                
+            # if p2 is not None:
+            #     p1.skip_pointer = p2
+            #     p1 = p2
+            # current = current + n_skips
+            # print('current pointer>>>>',current)
+        
+
+        print('************DONE*******************************')
+
 
     def insert_at_end(self, value):
         """ Write logic to add new elements to the linked list.
             Insert the element at an appropriate position, such that elements to the left are lower than the inserted
             element, and elements to the right are greater than the inserted element.
             To be implemented. """
-        raise NotImplementedError
+        new_node = Node(value=value, tf = 1)
+        self.length += 1
+        n = self.start_node
 
+        if self.start_node is None:
+            self.start_node = new_node
+            self.end_node = new_node
+            return
+
+        elif self.start_node.value >= value:
+            self.start_node = new_node
+            self.start_node.next = n
+            return
+
+        elif self.end_node.value <= value:
+            self.end_node.next = new_node
+            self.end_node = new_node
+            return
+
+        else:
+            while n.value < value < self.end_node.value and n.next is not None:
+                n = n.next
+
+            m = self.start_node
+            while m.next != n and m.next is not None:
+                m = m.next
+            m.next = new_node
+            new_node.next = n
+
+            return
+
+    def output_list(self):
+        "outputs the list (the value of the node, actually)"
+        
+        current_node = self.head
+        
+        while current_node is not None:
+            print(current_node.data)
+            
+            # jump to the linked node
+            current_node = current_node.next
+            
+        return
+    
+    def tf_increment(self,doc_id):
+        #to increase the tf value for term in document
+        n = self.start_node
+        while n:
+            if n.value != doc_id:
+                n = n.next
+            else:
+                n.tf = n.tf + 1
+                return n.tf
+        
+        return -1
+
+    def cal_tf_idf(self,freq_list,corpus_length):
+        # Tf = (freq of token in a doc after pre-processing / total tokens in the doc after pre-processing)
+        # Idf = (total num docs / length of postings list) 
+        # tf-idf = Tf*Idf
+        n = self.start_node
+        while n is not None:
+            doc_id = n.value
+            print('My document id is >',doc_id,'corpus_length>>',corpus_length)
+            tf = n.tf/freq_list[doc_id]
+            idf = corpus_length/self.length
+            n.score = tf*idf
+            print('SCORE->>>',n.score)
+            n = n.next
+
+    def print_linklist(self):
+        print('PRINTING MY LIST>>')
+        n = self.start_node
+        list = []
+        tf = []
+        while n:
+            list.append(n.value)
+            tf.append(n.tf)
+            n = n.next
+
+        print('PRINTING DATA**************')
+        print(tf)
+        print(list)

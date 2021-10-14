@@ -40,11 +40,11 @@ class ProjectRunner:
             To be implemented."""
         raise NotImplementedError
 
-    def _get_postings(self):
+    def _get_postings(self,term,skip):
         """ Function to get the postings list of a term from the index.
             Use appropriate parameters & return types.
             To be implemented."""
-        raise NotImplementedError
+        return self.indexer.get_postings(term,skip)
 
     def _output_formatter(self, op):
         """ This formats the result in the required format.
@@ -59,14 +59,17 @@ class ProjectRunner:
         """ This function reads & indexes the corpus. After creating the inverted index,
             it sorts the index by the terms, add skip pointers, and calculates the tf-idf scores.
             Already implemented, but you can modify the orchestration, as you seem fit."""
+        corpus_length = 0
         with open(corpus, 'r') as fp:
             for line in tqdm(fp.readlines()):
                 doc_id, document = self.preprocessor.get_doc_id(line)
                 tokenized_document = self.preprocessor.tokenizer(document)
                 self.indexer.generate_inverted_index(doc_id, tokenized_document)
+                corpus_length = corpus_length + 1
         self.indexer.sort_terms()
         self.indexer.add_skip_connections()
-        self.indexer.calculate_tf_idf()
+        print(corpus_length)
+        self.indexer.calculate_tf_idf(corpus_length)
 
     def sanity_checker(self, command):
         """ DO NOT MODIFY THIS. THIS IS USED BY THE GRADER. """
@@ -99,13 +102,15 @@ class ProjectRunner:
                 3. Get the DAAT AND query results & number of comparisons with & without skip pointers.
                 4. Get the DAAT AND query results & number of comparisons with & without skip pointers, 
                     along with sorting by tf-idf scores."""
-            raise NotImplementedError
 
-            input_term_arr = []  # Tokenized query. To be implemented.
+            input_term_arr = []
+            input_term_arr = self.preprocessor.tokenizer(query)
 
             for term in input_term_arr:
                 postings, skip_postings = None, None
 
+                postings = self._get_postings(term,False)
+                skip_postings = self._get_postings(term,True)
                 """ Implement logic to populate initialize the above variables.
                     The below code formats your result to the required format.
                     To be implemented."""
@@ -113,6 +118,7 @@ class ProjectRunner:
                 output_dict['postingsList'][term] = postings
                 output_dict['postingsListSkip'][term] = skip_postings
 
+            # raise NotImplementedError
             and_op_no_skip, and_op_skip, and_op_no_skip_sorted, and_op_skip_sorted = None, None, None, None
             and_comparisons_no_skip, and_comparisons_skip, \
                 and_comparisons_no_skip_sorted, and_comparisons_skip_sorted = None, None, None, None
@@ -174,7 +180,6 @@ def execute_query():
 if __name__ == "__main__":
     """ Driver code for the project, which defines the global variables.
         Do NOT change it."""
-
     output_location = "project2_output.json"
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--corpus", type=str, help="Corpus File name, with path.")
@@ -184,9 +189,9 @@ if __name__ == "__main__":
                              "DO NOT pass incorrect value here")
 
     argv = parser.parse_args()
-
     corpus = argv.corpus
     output_location = argv.output_location
+    print('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<REACHED HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
     username_hash = hashlib.md5(argv.username.encode()).hexdigest()
 
     """ Initialize the project runner"""
