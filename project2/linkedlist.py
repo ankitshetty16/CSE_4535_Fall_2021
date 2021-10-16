@@ -83,7 +83,7 @@ class LinkedList:
                 # print("Node 2 doc value: " + str(p2.value))  
                 p1 = p2        
 
-
+    ## TODO
     def insert_at_end(self, value):
         """ Write logic to add new elements to the linked list.
             Insert the element at an appropriate position, such that elements to the left are lower than the inserted
@@ -119,19 +119,6 @@ class LinkedList:
             new_node.next = n
 
             return
-
-    def output_list(self):
-        "outputs the list (the value of the node, actually)"
-        
-        current_node = self.head
-        
-        while current_node is not None:
-            print(current_node.data)
-            
-            # jump to the linked node
-            current_node = current_node.next
-            
-        return
     
     def tf_increment(self,doc_id):
         #to increase the tf value for term in document

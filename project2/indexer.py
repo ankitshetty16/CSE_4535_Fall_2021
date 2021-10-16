@@ -69,10 +69,3 @@ class Indexer:
         for item in self.inverted_index:
             # print('calculated tf_idf')
             self.inverted_index[item].cal_tf_idf(self.doc_token_freq,total_length)
-
-    def get_postings(self,term,skip):
-        if(skip):
-            return self.inverted_index[term].traverse_skips()
-        else:            
-            return self.inverted_index[term].traverse_list()
-
