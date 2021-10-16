@@ -31,18 +31,19 @@ class Indexer:
             If a term is not present in the index, then add the term to the index & initialize a new postings list (linked list).
             If a term is present, then add the document to the appropriate position in the posstings list of the term.
             To be implemented."""
-        if(term_ not in self.inverted_index):
-            # for new entry in inverted_index
-            linked_list = LinkedList()
-            linked_list.insert_at_end(doc_id_)
-            self.inverted_index[term_] = linked_list
-        else:
+        if(term_ in self.inverted_index):
             # for existing entry in inverted index
             linked_list = self.inverted_index[term_]
             value = linked_list.tf_increment(doc_id_)
-            if(value < 0):
+            if(value is None):
                 #doc_id_ not present in linkedlist
-                linked_list.insert_at_end(doc_id_)
+                linked_list.insert_at_end(doc_id_)            
+        elif (term_ not in self.inverted_index):
+            # for new entry in inverted_index
+            linked_list = LinkedList()
+            linked_list.insert_at_end(doc_id_)
+            self.inverted_index[term_] = linked_list            
+
 
     def sort_terms(self):
         """ Sorting the index by terms.
