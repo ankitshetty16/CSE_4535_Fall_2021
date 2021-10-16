@@ -143,6 +143,7 @@ class LinkedList:
             tf = n.tf/freq_list[doc_id]
             idf = corpus_length/self.length
             n.score = tf*idf
-            print('***************************score for '+ doc_id)
+            print('***************************score for ')
+            print(doc_id)
             print(n.score)
             n = n.next
