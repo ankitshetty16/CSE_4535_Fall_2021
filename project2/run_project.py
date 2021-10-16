@@ -39,12 +39,12 @@ class ProjectRunner:
             Use appropriate parameters & return types.
             To be implemented."""
         print(postings)
-        lists = []
-        for term in terms:
-            print(postings[term])
-            lists[term].append(postings[term])
+        # lists = []
+        # for term in terms:
+        #     print(postings[term])
+        #     lists[term].append(postings[term])
 
-        print(lists)
+        # print(lists)
 
 
         # raise NotImplementedError
@@ -138,7 +138,7 @@ class ProjectRunner:
                 The below code formats your result to the required format.
                 To be implemented."""
 
-            and_op_no_skip = self._daat_and(input_term_arr,postings)
+            and_op_no_skip = self._daat_and(input_term_arr,output_dict['postingsList'])
             
             # raise NotImplementedError
 
