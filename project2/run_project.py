@@ -38,11 +38,14 @@ class ProjectRunner:
         """ Implement the DAAT AND algorithm, which merges the postings list of N query terms.
             Use appropriate parameters & return types.
             To be implemented."""
-        print(postings)
+        # and_op_no_skip, and_op_skip
+        # print(postings)
+        my_index = self.indexer.get_index()
+
         # lists = []
-        # for term in terms:
-        #     print(postings[term])
-        #     lists[term].append(postings[term])
+        for term in terms:
+            print(my_index[term])
+            # lists[term].append(postings[term])
 
         # print(lists)
 
@@ -138,7 +141,9 @@ class ProjectRunner:
                 The below code formats your result to the required format.
                 To be implemented."""
 
-            and_op_no_skip = self._daat_and(input_term_arr,output_dict['postingsList'])
+
+            op_result = self._daat_and(input_term_arr,False,False)
+            #  and_op_no_skip = 
             
             # raise NotImplementedError
 
