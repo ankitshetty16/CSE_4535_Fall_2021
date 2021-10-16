@@ -46,7 +46,7 @@ class ProjectRunner:
             Use appropriate parameters & return types.
             To be implemented."""
         my_index = self.indexer.get_index()
-        if(skip):
+        if(skip is True):
             return my_index[term].traverse_skips()
         else:            
             return my_index[term].traverse_list()
