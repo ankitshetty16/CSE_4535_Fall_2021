@@ -56,7 +56,7 @@ class LinkedList:
             while node is not None:
                 traversal.append(node.value)
                 node = node.skip_pointers
-            print(len(traversal))
+
             return traversal
 
     def add_skip_connections(self):
@@ -91,7 +91,6 @@ class LinkedList:
         self.length += 1
 
         if my_score is not None:
-            print('my score inside insert at end ',my_score)
             new_node.score = my_score
         n = self.start_node
 
@@ -141,9 +140,7 @@ class LinkedList:
         n = self.start_node
         while n is not None:
             doc_id = n.value
-            # print('My document id is >',doc_id,'corpus_length>>',corpus_length)
             tf = n.tf/freq_list[doc_id]
             idf = corpus_length/self.length
             n.score = tf*idf
-            # print('SCORE->>>',n.score)
             n = n.next

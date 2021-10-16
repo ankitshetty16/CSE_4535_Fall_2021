@@ -63,5 +63,4 @@ class Indexer:
         """ Calculate tf-idf score for each document in the postings lists of the index.
             To be implemented."""
         for item in self.inverted_index:
-            # print('calculated tf_idf')
             self.inverted_index[item].cal_tf_idf(self.doc_token_freq,total_length)

@@ -40,13 +40,7 @@ class ProjectRunner:
         while f is not None and s is not None:
             comparisons = comparisons + 1
             if f.value == s.value:
-                # val = f.value if f.
-                print('>>>>>>>>>>>>>>')
-                print(f.score)
-                print(s.score)
                 my_score = f.score if f.score > s.score  else s.score
-                print('Doc value for score',f.value)
-                print('my score in merge function ',my_score)
                 merged_output.insert_at_end(f.value,my_score)
                 f = f.next
                 s = s.next
@@ -75,36 +69,21 @@ class ProjectRunner:
         """ Implement the DAAT AND algorithm, which merges the postings list of N query terms.
             Use appropriate parameters & return types.
             To be implemented."""
-        # and_op_no_skip, and_op_skip
-        # print(postings)
         my_index = self.indexer.get_index()
-        # print(terms)
         llists = OrderedDict({})
         for term in terms:
             llists[term] = my_index[term]
-            print(term, llists[term].length)
         # sequence = sorted(list_order.items(), key=lambda x: x[1], reverse=False)
         sequence = sorted(llists, key=lambda x:llists[x].length, reverse=False)
-        print(sequence)
-        print(len(sequence))
-        print(len(sequence)-1)
-        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
         counter = 0
         comparisons = 0
         final_llist = LinkedList()
         while counter < len(sequence)-1:
-            print('in while loop')
             first = llists[sequence[counter]] if counter == 0 else final_llist
             second = llists[sequence[counter+1]]
             final_llist, comp_result = self._merge(first,second,skip)
             comparisons = comparisons + comp_result
-            print(comparisons)
-            print('FINAL LIST ENTRY SCORE')
-            print(final_llist.start_node.score)
-            print('>>>>>>>>>>>>>>>-----------')
             counter = counter + 1
-            print(counter)
-            # break
 
         if tfidf_sort == False:
             return final_llist.traverse_list(), comparisons
@@ -112,13 +91,12 @@ class ProjectRunner:
         sort_llist = OrderedDict({})
         list_node = final_llist.start_node
         while list_node is not None:
-            print('value of list element -> ',list_node.value)
-            print('score of list element -> ',list_node.score)
             sort_llist[list_node.value] = list_node.score
             list_node = list_node.next
         print('&*&*&*&*&*&*&*&*&*&*&*&*&')
         print(sort_llist)
         sorted_list = sorted(sort_llist, key=lambda x:sort_llist[x], reverse=True)
+        print('For terms->>>> ',terms)
         print('sorted list->>>>>>>>>')
         print(sorted_list)
         return sorted_list, comparisons
@@ -158,12 +136,7 @@ class ProjectRunner:
                 corpus_length = corpus_length + 1
         self.indexer.sort_terms()
         self.indexer.add_skip_connections()
-        self.indexer.calculate_tf_idf(corpus_length)
-        #temp
-        print('Details printed below:.>>>>>>>>>>>>>')
-        data = self._daat_and(['sar', 'cov', '2', 'protein', 'structur'], False, True)
-        print('FINAL DATA>>>>>>>>>>>');
-        print(data)        
+        self.indexer.calculate_tf_idf(corpus_length)     
 
     def sanity_checker(self, command):
         """ DO NOT MODIFY THIS. THIS IS USED BY THE GRADER. """
