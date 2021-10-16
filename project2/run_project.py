@@ -27,7 +27,7 @@ class ProjectRunner:
         self.preprocessor = Preprocessor()
         self.indexer = Indexer()
 
-    def _merge(self,first,second):
+    def _merge(self,first,second,skip):
         """ Implement the merge algorithm to merge 2 postings list at a time.
             Use appropriate parameters & return types.
             While merging 2 postings list, preserve the maximum tf-idf value of a document.
@@ -41,16 +41,16 @@ class ProjectRunner:
             comparisons = comparisons + 1
             if f.value == s.value:
                 merged_output.insert_at_end(f.value)
-                f = f.next
-                s = s.next
+                f = f.next if skip == False else f.skip_pointers
+                s = s.next if skip == False else s.skip_pointers
             elif f.value < s.value:
-                f = f.next
+                f = f.next if skip == False else f.skip_pointers
             else:
-                s = s.next
+                s = s.next if skip == False else s.skip_pointers
 
         return merged_output, comparisons
 
-    def _daat_and(self,terms):
+    def _daat_and(self,terms,skip):
         """ Implement the DAAT AND algorithm, which merges the postings list of N query terms.
             Use appropriate parameters & return types.
             To be implemented."""
@@ -75,7 +75,7 @@ class ProjectRunner:
             print('in while loop')
             first = llists[sequence[counter]] if counter == 0 else final_llist
             second = llists[sequence[counter+1]]
-            final_llist, comp_result = self._merge(first,second)
+            final_llist, comp_result = self._merge(first,second,skip)
             comparisons = comparisons + comp_result
             print(comparisons)
             print(sequence[counter] if counter == 0 else 'final-LIST')
@@ -186,10 +186,9 @@ class ProjectRunner:
 
             print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
             print(input_term_arr)
-            and_op_no_skip, and_comparisons_no_skip  = self._daat_and(input_term_arr)
-            #  and_op_no_skip = 
-            
-            # raise NotImplementedError
+            and_op_no_skip, and_comparisons_no_skip  = self._daat_and(input_term_arr,False)
+            and_op_skip, and_comparisons_skip  = self._daat_and(input_term_arr, True)
+
 
             and_op_no_score_no_skip, and_results_cnt_no_skip = self._output_formatter(and_op_no_skip)
             and_op_no_score_skip, and_results_cnt_skip = self._output_formatter(and_op_skip)
