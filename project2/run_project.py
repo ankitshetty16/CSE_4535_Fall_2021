@@ -46,9 +46,12 @@ class ProjectRunner:
             Use appropriate parameters & return types.
             To be implemented."""
         my_index = self.indexer.get_index()
+        print('get postings in run project called',term,skip)
         if(skip is True):
+            print('SKIP traversal called',skip)
             return my_index[term].traverse_skips()
-        else:            
+        else:
+            # print('SKIP traversal called from main',skip)
             return my_index[term].traverse_list()
 
     def _output_formatter(self, op):
@@ -99,11 +102,11 @@ class ProjectRunner:
                        'daatAndSkipTfIdf': {},
                        'sanity': self.sanity_checker(random_command)}
         
-        print('QUERY LIST>>>>>>>>>>>>>>>>>>')
-        print(query_list)
-        print('RANDOMCOMMAND')
-        print(random_command)
-        print('----------------------------')
+        # print('QUERY LIST>>>>>>>>>>>>>>>>>>')
+        # print(query_list)
+        # print('RANDOMCOMMAND')
+        # print(random_command)
+        # print('----------------------------')
         for query in tqdm(query_list):
             """ Run each query against the index. You should do the following for each query:
                 1. Pre-process & tokenize the query.
@@ -117,9 +120,11 @@ class ProjectRunner:
 
             for term in input_term_arr:
                 postings, skip_postings = None, None
-
+                print('for loop called',term)
                 postings = self._get_postings(term,False)
                 skip_postings = self._get_postings(term,True)
+                print('my skip postings')
+                print(skip_postings)
                 """ Implement logic to populate initialize the above variables.
                     The below code formats your result to the required format.
                     To be implemented."""
@@ -128,7 +133,7 @@ class ProjectRunner:
                 output_dict['postingsListSkip'][term] = skip_postings
 
             # raise NotImplementedError
-            print(query)
+            # print(query)
             # self._daat_and(ter)
 
             and_op_no_skip, and_op_skip, and_op_no_skip_sorted, and_op_skip_sorted = None, None, None, None

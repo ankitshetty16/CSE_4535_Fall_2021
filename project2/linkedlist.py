@@ -5,6 +5,8 @@ Institute: University at Buffalo
 
 import math
 
+from nltk.grammar import Nonterminal
+
 
 class Node:
 
@@ -46,14 +48,20 @@ class LinkedList:
     def traverse_skips(self):
         traversal = []
         if self.start_node is None:
-            return traversal
+            return
         else:
             """ Write logic to traverse the linked list using skip pointers.
                 To be implemented."""
             node = self.start_node
             while node is not None:
+                print(node.value)
+                print('----------------')
+                print(node.skip_pointers)
+                print('---------**********-----')
+
                 traversal.append(node.value)
                 node = node.skip_pointers
+            print(len(traversal))
             return traversal
 
     def add_skip_connections(self):
@@ -77,11 +85,11 @@ class LinkedList:
                 p2 = p2.next
                 if (p2 is None):
                     break
-                      
+
             if p2 is not None:
-                p1.skip_pointer = p2
+                p1.skip_pointers = p2
                 # print("Node 2 doc value: " + str(p2.value))  
-                p1 = p2        
+                p1 = p2 
 
     ## TODO
     def insert_at_end(self, value):
@@ -123,7 +131,7 @@ class LinkedList:
     def tf_increment(self,doc_id):
         #to increase the tf value for term in document
         n = self.start_node
-        while n:
+        while n is not None:
             if n.value != doc_id:
                 n = n.next
             else:
