@@ -46,7 +46,7 @@ class LinkedList:
     def traverse_skips(self):
         traversal = []
         if self.start_node is None:
-            return
+            return traversal
         else:
             """ Write logic to traverse the linked list using skip pointers.
                 To be implemented."""
