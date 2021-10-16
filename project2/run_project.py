@@ -41,13 +41,15 @@ class ProjectRunner:
         # and_op_no_skip, and_op_skip
         # print(postings)
         my_index = self.indexer.get_index()
+        # print(terms)
+        llists = OrderedDict({})
+        print(my_index)
+        # for term in terms:
+        #     print(my_index[term])
+        #     llists[term] = my_index[term]
 
-        # lists = []
-        for term in terms:
-            print(my_index[term])
-            # lists[term].append(postings[term])
-
-        # print(lists)
+        # print(llists)
+        # print(sorted(llists, key = lambda x: -len(x[0])))
 
 
         # raise NotImplementedError
@@ -86,6 +88,9 @@ class ProjectRunner:
         self.indexer.sort_terms()
         self.indexer.add_skip_connections()
         self.indexer.calculate_tf_idf(corpus_length)
+        #temp
+
+        self._daat_and(['all', 'respiratory', 'diseases'])
 
     def sanity_checker(self, command):
         """ DO NOT MODIFY THIS. THIS IS USED BY THE GRADER. """
@@ -141,7 +146,8 @@ class ProjectRunner:
                 The below code formats your result to the required format.
                 To be implemented."""
 
-
+            print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+            print(input_term_arr)
             op_result = self._daat_and(input_term_arr)
             #  and_op_no_skip = 
             
@@ -223,5 +229,5 @@ if __name__ == "__main__":
     """ Index the documents from beforehand. When the API endpoint is hit, queries are run against 
         this pre-loaded in memory index. """
     runner.run_indexer(corpus)
-
+    # TODO
     app.run(host="0.0.0.0", port=9999)
