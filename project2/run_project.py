@@ -39,6 +39,7 @@ class ProjectRunner:
             Use appropriate parameters & return types.
             To be implemented."""
         my_index = self.indexer.get_index()
+        print(my_index)
 
         # raise NotImplementedError
 

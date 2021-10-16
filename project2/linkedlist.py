@@ -54,11 +54,6 @@ class LinkedList:
                 To be implemented."""
             node = self.start_node
             while node is not None:
-                print(node.value)
-                print('----------------')
-                print(node.skip_pointers)
-                print('---------**********-----')
-
                 traversal.append(node.value)
                 node = node.skip_pointers
             print(len(traversal))
@@ -153,17 +148,3 @@ class LinkedList:
             n.score = tf*idf
             # print('SCORE->>>',n.score)
             n = n.next
-
-    def print_linklist(self):
-        print('PRINTING MY LIST>>')
-        n = self.start_node
-        list = []
-        tf = []
-        while n:
-            list.append(n.value)
-            tf.append(n.tf)
-            n = n.next
-
-        print('PRINTING DATA**************')
-        print(tf)
-        print(list)
