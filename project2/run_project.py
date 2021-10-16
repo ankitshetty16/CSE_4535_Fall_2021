@@ -40,7 +40,12 @@ class ProjectRunner:
         while f is not None and s is not None:
             comparisons = comparisons + 1
             if f.value == s.value:
-                merged_output.insert_at_end(f.value)
+                # val = f.value if f.
+                print('>>>>>>>>>>>>>>')
+                print(f.score)
+                print(s.score)
+                my_score = f.score if f.score > s.score  else s.score
+                merged_output.insert_at_end(f.value,my_score)
                 f = f.next
                 s = s.next
             elif f.value < s.value:
@@ -49,34 +54,22 @@ class ProjectRunner:
                 elif skip == True:
                     # for skip pointer
                     if f.skip_pointers is not None and f.skip_pointers.value <= s.value:
-                        # while f.skip_pointers and f.skip_pointers.value <= s.value:
                         f = f.skip_pointers
                     else:
-                        f = f.next
-                    # elif s.skip_pointers is not None and s.skip_pointers.value <= f.value:
-                    #     while s.skip_pointers and s.skip_pointers.value <= f.value:  
-                    #         s = s.skip_pointers
-                    #     else:
-                    #         s = s.next                        
+                        f = f.next                      
             elif f.value > s.value:
                 if skip == False:
                     s = s.next
                 elif skip == True:
                     # for skip pointer
                     if s.skip_pointers is not None and s.skip_pointers.value <= f.value:
-                        # while s.skip_pointers and s.skip_pointers.value <= f.value:
                         s = s.skip_pointers
                     else:
-                        s = s.next
-                    # elif f.skip_pointers is not None and f.skip_pointers.value <= s.value:
-                    #     while f.skip_pointers and f.skip_pointers.value <= s.value:  
-                    #         f = f.skip_pointers
-                    #     else:
-                    #         f = f.next                   
+                        s = s.next              
 
         return merged_output, comparisons
 
-    def _daat_and(self,terms,skip):
+    def _daat_and(self,terms,skip,tfidf_sort):
         """ Implement the DAAT AND algorithm, which merges the postings list of N query terms.
             Use appropriate parameters & return types.
             To be implemented."""
@@ -104,14 +97,28 @@ class ProjectRunner:
             final_llist, comp_result = self._merge(first,second,skip)
             comparisons = comparisons + comp_result
             print(comparisons)
-            print(sequence[counter] if counter == 0 else 'final-LIST')
-            print(sequence[counter+1])
+            print('FINAL LIST ENTRY SCORE')
+            print(final_llist.score)
             print('>>>>>>>>>>>>>>>-----------')
             counter = counter + 1
             print(counter)
             # break
+
+        if tfidf_sort == False:
+            return final_llist.traverse_list(), comparisons
         
-        return final_llist.traverse_list(), comparisons
+        sort_llist = OrderedDict({})
+        list_node = first.start_node
+        while list_node is not None:
+            sort_llist[list_node.value] = list_node.score
+        print('&*&*&*&*&*&*&*&*&*&*&*&*&')
+        print(sort_llist)
+        sorted_list = sorted(sort_llist, key=lambda x:sort_llist[x].score, reverse=False)
+        print('sorted list->>>>>>>>>')
+        print(sorted_list)
+        return sorted_list, comparisons
+
+        
 
     def _get_postings(self,term,skip):
         """ Function to get the postings list of a term from the index.
@@ -147,10 +154,10 @@ class ProjectRunner:
         self.indexer.add_skip_connections()
         self.indexer.calculate_tf_idf(corpus_length)
         #temp
-        # print('Details printed below:.>>>>>>>>>>>>>')
-        # data = self._daat_and(['sar', 'cov', '2', 'protein', 'structur'], True)
-        # print('FINAL DATA>>>>>>>>>>>');
-        # print(data)
+        print('Details printed below:.>>>>>>>>>>>>>')
+        data = self._daat_and(['sar', 'cov', '2', 'protein', 'structur'], False, True)
+        print('FINAL DATA>>>>>>>>>>>');
+        print(data)        
 
     def sanity_checker(self, command):
         """ DO NOT MODIFY THIS. THIS IS USED BY THE GRADER. """
@@ -208,8 +215,10 @@ class ProjectRunner:
 
             print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
             print(input_term_arr)
-            and_op_no_skip, and_comparisons_no_skip  = self._daat_and(input_term_arr,False)
-            and_op_skip, and_comparisons_skip  = self._daat_and(input_term_arr, True)
+            and_op_no_skip, and_comparisons_no_skip  = self._daat_and(input_term_arr,False, False)
+            and_op_skip, and_comparisons_skip  = self._daat_and(input_term_arr, True, False)
+            and_op_no_skip_sorted, and_comparisons_no_skip_sorted  = self._daat_and(input_term_arr, False, True)
+            and_op_skip_sorted, and_comparisons_skip_sorted  = self._daat_and(input_term_arr, True, True)
 
 
             and_op_no_score_no_skip, and_results_cnt_no_skip = self._output_formatter(and_op_no_skip)
