@@ -45,6 +45,8 @@ class ProjectRunner:
                 print(f.score)
                 print(s.score)
                 my_score = f.score if f.score > s.score  else s.score
+                print('Doc value for score',f.value)
+                print('my score in merge function ',my_score)
                 merged_output.insert_at_end(f.value,my_score)
                 f = f.next
                 s = s.next
@@ -98,7 +100,7 @@ class ProjectRunner:
             comparisons = comparisons + comp_result
             print(comparisons)
             print('FINAL LIST ENTRY SCORE')
-            print(final_llist.score)
+            print(final_llist.start_node.score)
             print('>>>>>>>>>>>>>>>-----------')
             counter = counter + 1
             print(counter)
@@ -108,15 +110,19 @@ class ProjectRunner:
             return final_llist.traverse_list(), comparisons
         
         sort_llist = OrderedDict({})
-        list_node = first.start_node
+        list_node = final_llist.start_node
         while list_node is not None:
+            print('value of list element -> ',list_node.value)
+            print('score of list element -> ',list_node.score)
             sort_llist[list_node.value] = list_node.score
+            list_node = list_node.next
         print('&*&*&*&*&*&*&*&*&*&*&*&*&')
         print(sort_llist)
-        sorted_list = sorted(sort_llist, key=lambda x:sort_llist[x].score, reverse=False)
+        sorted_list = sorted(sort_llist, key=lambda x:sort_llist[x], reverse=True)
         print('sorted list->>>>>>>>>')
         print(sorted_list)
         return sorted_list, comparisons
+        # return final_llist.traverse_list(), comparisons
 
         
 

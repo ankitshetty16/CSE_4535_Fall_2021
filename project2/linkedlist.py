@@ -82,15 +82,17 @@ class LinkedList:
                 p1 = p2 
 
     ## TODO
-    def insert_at_end(self, value, my_score = None):
+    def insert_at_end(self, value, my_score=None):
         """ Write logic to add new elements to the linked list.
             Insert the element at an appropriate position, such that elements to the left are lower than the inserted
             element, and elements to the right are greater than the inserted element.
             To be implemented. """
         new_node = Node(value=value, tf = 1)
         self.length += 1
+
         if my_score is not None:
-            self.score = my_score
+            print('my score inside insert at end ',my_score)
+            new_node.score = my_score
         n = self.start_node
 
         if self.start_node is None:
