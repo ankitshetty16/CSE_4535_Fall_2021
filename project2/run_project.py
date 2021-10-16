@@ -49,30 +49,30 @@ class ProjectRunner:
                 elif skip == True:
                     # for skip pointer
                     if f.skip_pointers is not None and f.skip_pointers.value <= s.value:
-                        while f.skip_pointers and f.skip_pointers.value <= s.value:
-                            f = f.skip_pointers
-                        else:
-                            f = f.next
-                    elif s.skip_pointers is not None and s.skip_pointers.value <= f.value:
-                        while s.skip_pointers and s.skip_pointers.value <= f.value:  
-                            s = s.skip_pointers
-                        else:
-                            s = s.next                        
+                        # while f.skip_pointers and f.skip_pointers.value <= s.value:
+                        f = f.skip_pointers
+                    else:
+                        f = f.next
+                    # elif s.skip_pointers is not None and s.skip_pointers.value <= f.value:
+                    #     while s.skip_pointers and s.skip_pointers.value <= f.value:  
+                    #         s = s.skip_pointers
+                    #     else:
+                    #         s = s.next                        
             elif f.value > s.value:
                 if skip == False:
                     s = s.next
                 elif skip == True:
                     # for skip pointer
                     if s.skip_pointers is not None and s.skip_pointers.value <= f.value:
-                        while s.skip_pointers and s.skip_pointers.value <= f.value:
-                            s = s.skip_pointers
-                        else:
-                            s = s.next
-                    elif f.skip_pointers is not None and f.skip_pointers.value <= s.value:
-                        while f.skip_pointers and f.skip_pointers.value <= s.value:  
-                            f = f.skip_pointers
-                        else:
-                            f = f.next                   
+                        # while s.skip_pointers and s.skip_pointers.value <= f.value:
+                        s = s.skip_pointers
+                    else:
+                        s = s.next
+                    # elif f.skip_pointers is not None and f.skip_pointers.value <= s.value:
+                    #     while f.skip_pointers and f.skip_pointers.value <= s.value:  
+                    #         f = f.skip_pointers
+                    #     else:
+                    #         f = f.next                   
 
         return merged_output, comparisons
 
