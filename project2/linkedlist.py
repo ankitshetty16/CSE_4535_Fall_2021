@@ -67,10 +67,6 @@ class LinkedList:
             This function does not return anything.
             To be implemented."""
         self.skip_length = (int)(round(math.sqrt(self.length), 0))
-        # if(n_skips < 2):
-        #     return
-        # print('Total length = ' + str(self.length))
-        # print('Skip length = ' + str(self.skip_length))
         p1 = self.start_node
         p2 = self.start_node
         while p1 is not None and p2 is not None:
@@ -82,8 +78,7 @@ class LinkedList:
                     break
 
             if p2 is not None:
-                p1.skip_pointers = p2
-                # print("Node 2 doc value: " + str(p2.value))  
+                p1.skip_pointers = p2  
                 p1 = p2 
 
     ## TODO

@@ -37,26 +37,17 @@ class ProjectRunner:
         f = first.start_node
         s = second.start_node
         print('******************************')
-        if skip == False:
-            while f is not None and s is not None:
-                comparisons = comparisons + 1
-                if f.value == s.value:
-                    merged_output.insert_at_end(f.value)
+        while f is not None and s is not None:
+            comparisons = comparisons + 1
+            if f.value == s.value:
+                merged_output.insert_at_end(f.value)
+                f = f.next
+                s = s.next
+            elif f.value < s.value:
+                if skip == False:
                     f = f.next
-                    s = s.next
-                elif f.value < s.value:
-                    f = f.next
-                else:
-                    s = s.next
-        elif skip == True:
-            print('inside skip loop')
-            while f is not None and s is not None:
-                if f.value == s.value:
-                    merged_output.insert_at_end(f.value)
-                    f = f.next
-                    s = s.next
-                elif f.value < s.value:
-                    print('inside skip ELSEEEE')
+                elif skip == True:
+                    # for skip pointer
                     if f.skip_pointers is not None and f.skip_pointers.value <= s.value:
                         while f.skip_pointers and f.skip_pointers.value <= s.value:
                             f = f.skip_pointers
@@ -66,9 +57,12 @@ class ProjectRunner:
                         while s.skip_pointers and s.skip_pointers.value <= f.value:  
                             s = s.skip_pointers
                         else:
-                            s = s.next
-                elif f.value > s.value:
-                    print('VALUE IS GREATER-------------------------')
+                            s = s.next                        
+            elif f.value > s.value:
+                if skip == False:
+                    s = s.next
+                elif skip == True:
+                    # for skip pointer
                     if s.skip_pointers is not None and s.skip_pointers.value <= f.value:
                         while s.skip_pointers and s.skip_pointers.value <= f.value:
                             s = s.skip_pointers
@@ -78,7 +72,7 @@ class ProjectRunner:
                         while f.skip_pointers and f.skip_pointers.value <= s.value:  
                             f = f.skip_pointers
                         else:
-                            f = f.next                    
+                            f = f.next                   
 
         return merged_output, comparisons
 
@@ -119,9 +113,6 @@ class ProjectRunner:
         
         return final_llist.traverse_list(), comparisons
 
-
-        # raise NotImplementedError
-
     def _get_postings(self,term,skip):
         """ Function to get the postings list of a term from the index.
             Use appropriate parameters & return types.
@@ -130,7 +121,6 @@ class ProjectRunner:
         if(skip is True):
             return my_index[term].traverse_skips()
         else:
-            # print('SKIP traversal called from main',skip)
             return my_index[term].traverse_list()
 
     def _output_formatter(self, op):
@@ -157,10 +147,10 @@ class ProjectRunner:
         self.indexer.add_skip_connections()
         self.indexer.calculate_tf_idf(corpus_length)
         #temp
-        print('Details printed below:.>>>>>>>>>>>>>')
-        data = self._daat_and(['sar', 'cov', '2', 'protein', 'structur'], True)
-        print('FINAL DATA>>>>>>>>>>>');
-        print(data)
+        # print('Details printed below:.>>>>>>>>>>>>>')
+        # data = self._daat_and(['sar', 'cov', '2', 'protein', 'structur'], True)
+        # print('FINAL DATA>>>>>>>>>>>');
+        # print(data)
 
     def sanity_checker(self, command):
         """ DO NOT MODIFY THIS. THIS IS USED BY THE GRADER. """

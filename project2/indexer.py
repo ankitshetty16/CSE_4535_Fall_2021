@@ -36,17 +36,13 @@ class Indexer:
             linked_list = LinkedList()
             linked_list.insert_at_end(doc_id_)
             self.inverted_index[term_] = linked_list
-            # print('NEW TERM->>>>>>>>>>>>>>>>>>>>>'+term_)
-            # print(linked_list.print_linklist())
-        
         else:
             # for existing entry in inverted index
             linked_list = self.inverted_index[term_]
             value = linked_list.tf_increment(doc_id_)
             if(value < 0):
+                #doc_id_ not present in linkedlist
                 linked_list.insert_at_end(doc_id_)
-            # print('EXISTING TERM->>>>>>>>>>>>>>>>>>>>>'+term_)
-            # print(linked_list.print_linklist())
 
     def sort_terms(self):
         """ Sorting the index by terms.
