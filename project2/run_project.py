@@ -75,7 +75,8 @@ class ProjectRunner:
             print('in while loop')
             first = llists[sequence[counter]] if counter == 0 else final_llist
             second = llists[sequence[counter+1]]
-            final_llist, comparisons = self._merge(first,second)
+            final_llist, comp_result = self._merge(first,second)
+            comparisons = comparisons + comp_result
             print(comparisons)
             print(sequence[counter] if counter == 0 else 'final-LIST')
             print(sequence[counter+1])
