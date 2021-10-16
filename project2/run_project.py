@@ -27,12 +27,28 @@ class ProjectRunner:
         self.preprocessor = Preprocessor()
         self.indexer = Indexer()
 
-    def _merge(self):
+    def _merge(self,first,second):
         """ Implement the merge algorithm to merge 2 postings list at a time.
             Use appropriate parameters & return types.
             While merging 2 postings list, preserve the maximum tf-idf value of a document.
             To be implemented."""
-        raise NotImplementedError
+        merged_output = LinkedList()
+        comparisons = 0
+        f = first.start_node
+        s = second.start_node
+        print('******************************')
+        while f is not None and s is not None:
+            comparisons = comparisons + 1
+            if f.value == s.value:
+                merged_output.insert_at_end(f.value)
+                f = f.next
+                s = s.next
+            elif f.value < s.value:
+                f = f.next
+            else:
+                s = s.next
+
+        return merged_output, comparisons
 
     def _daat_and(self,terms):
         """ Implement the DAAT AND algorithm, which merges the postings list of N query terms.
@@ -43,13 +59,32 @@ class ProjectRunner:
         my_index = self.indexer.get_index()
         # print(terms)
         llists = OrderedDict({})
-        print(my_index)
-        # for term in terms:
-        #     print(my_index[term])
-        #     llists[term] = my_index[term]
-
-        # print(llists)
-        # print(sorted(llists, key = lambda x: -len(x[0])))
+        for term in terms:
+            llists[term] = my_index[term]
+            print(term, llists[term].length)
+        # sequence = sorted(list_order.items(), key=lambda x: x[1], reverse=False)
+        sequence = sorted(llists, key=lambda x:llists[x].length, reverse=False)
+        print(sequence)
+        print(len(sequence))
+        print(len(sequence)-1)
+        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+        counter = 0
+        comparisons = 0
+        final_llist = LinkedList()
+        while counter < len(sequence)-1:
+            print('in while loop')
+            first = llists[sequence[counter]] if counter == 0 else final_llist
+            second = llists[sequence[counter+1]]
+            final_llist, comparisons = self._merge(first,second)
+            print(comparisons)
+            print(sequence[counter] if counter == 0 else 'final-LIST')
+            print(sequence[counter+1])
+            print('>>>>>>>>>>>>>>>-----------')
+            counter = counter + 1
+            print(counter)
+            # break
+        
+        return final_llist.traverse_list(), comparisons
 
 
         # raise NotImplementedError
@@ -90,7 +125,9 @@ class ProjectRunner:
         self.indexer.calculate_tf_idf(corpus_length)
         #temp
 
-        self._daat_and(['all', 'respiratory', 'diseases'])
+        # data = self._daat_and(['sar', 'cov', '2', 'protein', 'structur'])
+        # print('FINAL DATA>>>>>>>>>>>');
+        # print(data)
 
     def sanity_checker(self, command):
         """ DO NOT MODIFY THIS. THIS IS USED BY THE GRADER. """
@@ -148,7 +185,7 @@ class ProjectRunner:
 
             print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
             print(input_term_arr)
-            op_result = self._daat_and(input_term_arr)
+            and_op_no_skip, and_comparisons_no_skip  = self._daat_and(input_term_arr)
             #  and_op_no_skip = 
             
             # raise NotImplementedError
