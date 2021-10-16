@@ -37,16 +37,36 @@ class ProjectRunner:
         f = first.start_node
         s = second.start_node
         print('******************************')
-        while f is not None and s is not None:
-            comparisons = comparisons + 1
-            if f.value == s.value:
-                merged_output.insert_at_end(f.value)
-                f = f.next if skip == False else f.skip_pointers
-                s = s.next if skip == False else s.skip_pointers
-            elif f.value < s.value:
-                f = f.next if skip == False else f.skip_pointers
-            else:
-                s = s.next if skip == False else s.skip_pointers
+        if skip == False:
+            while f is not None and s is not None:
+                comparisons = comparisons + 1
+                if f.value == s.value:
+                    merged_output.insert_at_end(f.value)
+                    f = f.next
+                    s = s.next
+                elif f.value < s.value:
+                    f = f.next
+                else:
+                    s = s.next
+        elif skip == True:
+            print('inside skip loop')
+            while f is not None and s is not None:
+                if f.value == s.value:
+                    merged_output.insert_at_end(f.value)
+                    f = f.next
+                    s = s.next
+                elif f.value < s.value:
+                    if f.skip_pointer is not None and f.skip_pointer <= s.value:
+                        while f.skip_pointer and f.skip_pointer <= s.value:
+                            f = f.skip_pointer
+                        else:
+                            f = f.next
+                    elif s.skip_pointer is not None and s.skip_pointer <= f.value:
+                        while s.skip_pointer and s.skip_pointer <= f.value:  
+                            s = s.skip_pointer
+                        else:
+                            s = s.next
+
 
         return merged_output, comparisons
 
@@ -126,9 +146,9 @@ class ProjectRunner:
         self.indexer.calculate_tf_idf(corpus_length)
         #temp
 
-        # data = self._daat_and(['sar', 'cov', '2', 'protein', 'structur'])
-        # print('FINAL DATA>>>>>>>>>>>');
-        # print(data)
+        data = self._daat_and(['sar', 'cov', '2', 'protein', 'structur'], True)
+        print('FINAL DATA>>>>>>>>>>>');
+        print(data)
 
     def sanity_checker(self, command):
         """ DO NOT MODIFY THIS. THIS IS USED BY THE GRADER. """
