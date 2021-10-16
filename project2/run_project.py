@@ -38,17 +38,16 @@ class ProjectRunner:
         """ Implement the DAAT AND algorithm, which merges the postings list of N query terms.
             Use appropriate parameters & return types.
             To be implemented."""
-        (self.indexer)
-        raise NotImplementedError
+        my_index = self.indexer.get_index()
+
+        # raise NotImplementedError
 
     def _get_postings(self,term,skip):
         """ Function to get the postings list of a term from the index.
             Use appropriate parameters & return types.
             To be implemented."""
         my_index = self.indexer.get_index()
-        print('get postings in run project called',term,skip)
         if(skip is True):
-            print('SKIP traversal called',skip)
             return my_index[term].traverse_skips()
         else:
             # print('SKIP traversal called from main',skip)
@@ -101,12 +100,7 @@ class ProjectRunner:
                        'daatAndTfIdf': {},
                        'daatAndSkipTfIdf': {},
                        'sanity': self.sanity_checker(random_command)}
-        
-        # print('QUERY LIST>>>>>>>>>>>>>>>>>>')
-        # print(query_list)
-        # print('RANDOMCOMMAND')
-        # print(random_command)
-        # print('----------------------------')
+        print(query_list)
         for query in tqdm(query_list):
             """ Run each query against the index. You should do the following for each query:
                 1. Pre-process & tokenize the query.
@@ -120,11 +114,9 @@ class ProjectRunner:
 
             for term in input_term_arr:
                 postings, skip_postings = None, None
-                print('for loop called',term)
                 postings = self._get_postings(term,False)
                 skip_postings = self._get_postings(term,True)
-                print('my skip postings')
-                print(skip_postings)
+
                 """ Implement logic to populate initialize the above variables.
                     The below code formats your result to the required format.
                     To be implemented."""
@@ -132,16 +124,17 @@ class ProjectRunner:
                 output_dict['postingsList'][term] = postings
                 output_dict['postingsListSkip'][term] = skip_postings
 
-            # raise NotImplementedError
-            # print(query)
-            # self._daat_and(ter)
-
             and_op_no_skip, and_op_skip, and_op_no_skip_sorted, and_op_skip_sorted = None, None, None, None
             and_comparisons_no_skip, and_comparisons_skip, \
                 and_comparisons_no_skip_sorted, and_comparisons_skip_sorted = None, None, None, None
             """ Implement logic to populate initialize the above variables.
                 The below code formats your result to the required format.
                 To be implemented."""
+
+            merge_result = self._daat_and()
+            
+            # raise NotImplementedError
+
             and_op_no_score_no_skip, and_results_cnt_no_skip = self._output_formatter(and_op_no_skip)
             and_op_no_score_skip, and_results_cnt_skip = self._output_formatter(and_op_skip)
             and_op_no_score_no_skip_sorted, and_results_cnt_no_skip_sorted = self._output_formatter(and_op_no_skip_sorted)
