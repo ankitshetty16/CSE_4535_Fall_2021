@@ -34,7 +34,7 @@ class ProjectRunner:
             To be implemented."""
         raise NotImplementedError
 
-    def _daat_and(self,terms,postings):
+    def _daat_and(self,terms):
         """ Implement the DAAT AND algorithm, which merges the postings list of N query terms.
             Use appropriate parameters & return types.
             To be implemented."""
@@ -142,7 +142,7 @@ class ProjectRunner:
                 To be implemented."""
 
 
-            op_result = self._daat_and(input_term_arr,False,False)
+            op_result = self._daat_and(input_term_arr)
             #  and_op_no_skip = 
             
             # raise NotImplementedError
