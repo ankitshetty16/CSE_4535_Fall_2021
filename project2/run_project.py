@@ -56,17 +56,29 @@ class ProjectRunner:
                     f = f.next
                     s = s.next
                 elif f.value < s.value:
-                    if f.skip_pointer is not None and f.skip_pointer <= s.value:
-                        while f.skip_pointer and f.skip_pointer <= s.value:
-                            f = f.skip_pointer
+                    print('inside skip ELSEEEE')
+                    if f.skip_pointers is not None and f.skip_pointers.value <= s.value:
+                        while f.skip_pointers and f.skip_pointers.value <= s.value:
+                            f = f.skip_pointers
                         else:
                             f = f.next
-                    elif s.skip_pointer is not None and s.skip_pointer <= f.value:
-                        while s.skip_pointer and s.skip_pointer <= f.value:  
-                            s = s.skip_pointer
+                    elif s.skip_pointers is not None and s.skip_pointers.value <= f.value:
+                        while s.skip_pointers and s.skip_pointers.value <= f.value:  
+                            s = s.skip_pointers
                         else:
                             s = s.next
-
+                elif f.value > s.value:
+                    print('VALUE IS GREATER-------------------------')
+                    if s.skip_pointers is not None and s.skip_pointers.value <= f.value:
+                        while s.skip_pointers and s.skip_pointers.value <= f.value:
+                            s = s.skip_pointers
+                        else:
+                            s = s.next
+                    elif f.skip_pointers is not None and f.skip_pointers.value <= s.value:
+                        while f.skip_pointers and f.skip_pointers.value <= s.value:  
+                            f = f.skip_pointers
+                        else:
+                            f = f.next                    
 
         return merged_output, comparisons
 
@@ -145,7 +157,7 @@ class ProjectRunner:
         self.indexer.add_skip_connections()
         self.indexer.calculate_tf_idf(corpus_length)
         #temp
-
+        print('Details printed below:.>>>>>>>>>>>>>')
         data = self._daat_and(['sar', 'cov', '2', 'protein', 'structur'], True)
         print('FINAL DATA>>>>>>>>>>>');
         print(data)
