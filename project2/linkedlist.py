@@ -64,8 +64,8 @@ class LinkedList:
             This function does not return anything.
             To be implemented."""
         self.skip_length = (int)(round(math.sqrt(self.length), 0))
-        if(n_skips < 2):
-            return
+        # if(n_skips < 2):
+        #     return
         # print('Total length = ' + str(self.length))
         # print('Skip length = ' + str(self.skip_length))
         p1 = self.start_node
