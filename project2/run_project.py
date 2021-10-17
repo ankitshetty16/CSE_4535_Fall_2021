@@ -36,7 +36,7 @@ class ProjectRunner:
         comparisons = 0
         f = first.start_node
         s = second.start_node
-        print('******************************')
+
         while f is not None and s is not None:
             comparisons = comparisons + 1
             if f.value == s.value:
@@ -73,7 +73,7 @@ class ProjectRunner:
         llists = OrderedDict({})
         for term in terms:
             llists[term] = my_index[term]
-        # sequence = sorted(list_order.items(), key=lambda x: x[1], reverse=False)
+
         sequence = sorted(llists, key=lambda x:llists[x].length, reverse=False)
         counter = 0
         comparisons = 0
@@ -93,16 +93,10 @@ class ProjectRunner:
         while list_node is not None:
             sort_llist[list_node.value] = list_node.score
             list_node = list_node.next
-        print('&*&*&*&*&*&*&*&*&*&*&*&*&')
-        print(sort_llist)
         sorted_list = sorted(sort_llist, key=lambda x:sort_llist[x], reverse=True)
-        print('For terms->>>> ',terms)
-        print('sorted list->>>>>>>>>')
-        print(sorted_list)
+
         return sorted_list, comparisons
         # return final_llist.traverse_list(), comparisons
-
-        
 
     def _get_postings(self,term,skip):
         """ Function to get the postings list of a term from the index.
@@ -161,7 +155,7 @@ class ProjectRunner:
                        'daatAndTfIdf': {},
                        'daatAndSkipTfIdf': {},
                        'sanity': self.sanity_checker(random_command)}
-        print(query_list)
+
         for query in tqdm(query_list):
             """ Run each query against the index. You should do the following for each query:
                 1. Pre-process & tokenize the query.
@@ -192,8 +186,6 @@ class ProjectRunner:
                 The below code formats your result to the required format.
                 To be implemented."""
 
-            print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-            print(input_term_arr)
             and_op_no_skip, and_comparisons_no_skip  = self._daat_and(input_term_arr,False, False)
             and_op_skip, and_comparisons_skip  = self._daat_and(input_term_arr, True, False)
             and_op_no_skip_sorted, and_comparisons_no_skip_sorted  = self._daat_and(input_term_arr, False, True)
@@ -249,7 +241,7 @@ def execute_query():
         "time_taken": str(time.time() - start_time),
         "username_hash": username_hash
     }
-    print(flask.jsonify(response))
+
     return flask.jsonify(response)
 
 
@@ -276,5 +268,5 @@ if __name__ == "__main__":
     """ Index the documents from beforehand. When the API endpoint is hit, queries are run against 
         this pre-loaded in memory index. """
     runner.run_indexer(corpus)
-    # TODO
+
     app.run(host="0.0.0.0", port=9999)
