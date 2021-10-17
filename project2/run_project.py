@@ -96,7 +96,6 @@ class ProjectRunner:
         sorted_list = sorted(sort_llist, key=lambda x:sort_llist[x], reverse=True)
 
         return sorted_list, comparisons
-        # return final_llist.traverse_list(), comparisons
 
     def _get_postings(self,term,skip):
         """ Function to get the postings list of a term from the index.
