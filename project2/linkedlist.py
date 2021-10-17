@@ -5,9 +5,6 @@ Institute: University at Buffalo
 
 import math
 
-from nltk.grammar import Nonterminal
-
-
 class Node:
 
     def __init__(self, value=None,tf=None, next=None):
@@ -81,12 +78,11 @@ class LinkedList:
                 p1.skip_pointers = p2  
                 p1 = p2 
 
-    ## TODO
     def insert_at_end(self, value, my_score=None):
         """ Write logic to add new elements to the linked list.
             Insert the element at an appropriate position, such that elements to the left are lower than the inserted
             element, and elements to the right are greater than the inserted element.
-            To be implemented. """
+            To be implemented. ##Adapted from Recitation"""
         new_node = Node(value=value, tf = 1)
         self.length += 1
 
@@ -131,7 +127,7 @@ class LinkedList:
                 n.tf = n.tf + 1
                 return n.tf
         
-        return -1
+        return None
 
     def cal_tf_idf(self,freq_list,corpus_length):
         # Tf = (freq of token in a doc after pre-processing / total tokens in the doc after pre-processing)

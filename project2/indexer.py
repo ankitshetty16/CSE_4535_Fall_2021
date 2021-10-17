@@ -35,7 +35,7 @@ class Indexer:
             # for existing entry in inverted index
             linked_list = self.inverted_index[term_]
             value = linked_list.tf_increment(doc_id_)
-            if(value < 0):
+            if(value is None):
                 #doc_id_ not present in linkedlist
                 linked_list.insert_at_end(doc_id_)            
         elif (term_ not in self.inverted_index):
