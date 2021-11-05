@@ -4,7 +4,7 @@ import requests
 import json
 
 CORE_NAME = "IRF21_p3_vsm_1"
-AWS_IP = "13.58.228.187"
+AWS_IP = "3.134.101.124"
 
 
 def delete_core(core=CORE_NAME):
@@ -85,7 +85,7 @@ class Indexer:
         print(requests.post(self.solr_url + CORE_NAME + "/schema", json=data).json())
 
 
-    def replace_BM25(self, b=None, k1=None):
+    def replace_VSM(self, b=None, k1=None):
         data = {
             "replace-field-type": [
                 {
@@ -198,7 +198,7 @@ if __name__ == "__main__":
     i = Indexer()
     i.do_initial_setup()
 
-    i.replace_BM25(b=0.8, k1=1.4)
+    i.replace_VSM()
     
     i.add_fields()
     # i.replace_fields()

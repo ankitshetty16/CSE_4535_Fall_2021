@@ -4,7 +4,7 @@ import requests
 import json
 
 CORE_NAME = "IRF21_p3_bm25_1"
-AWS_IP = "13.58.228.187"
+AWS_IP = "3.134.101.124"
 
 
 def delete_core(core=CORE_NAME):
