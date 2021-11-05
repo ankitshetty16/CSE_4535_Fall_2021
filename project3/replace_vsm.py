@@ -3,7 +3,7 @@ import pysolr
 import requests
 import json
 
-CORE_NAME = "IRF21_p3_vsm_1"
+CORE_NAME = "IRF21_p3_vsm_2"
 AWS_IP = "3.134.101.124"
 
 

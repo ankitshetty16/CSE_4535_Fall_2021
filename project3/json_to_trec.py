@@ -11,7 +11,7 @@ from urllib.parse import quote
 # declare parameters
 AWS_IP = '3.134.101.124'
 IRModels = ['bm25', 'vsm'] #either bm25 or vsm
-train = False
+train = True
 if train == True:
     # query file to be used for training
     f = open('queries.txt','r')
@@ -21,7 +21,7 @@ else:
 documents = f.readlines()
 
 for IRModel in IRModels:
-    core = f'IRF21_p3_{IRModel}_1' #'IRF21_p3_vsm_1','IRF21_p3_bm25_1'
+    core = f'IRF21_p3_{IRModel}_2' #'IRF21_p3_vsm_1','IRF21_p3_bm25_1'
     print(core)
 
     for index, document in enumerate(documents):
@@ -29,10 +29,10 @@ for IRModel in IRModels:
         text = document[ 4 : -1 ]
 
         textValue = quote(text)
-        inurl = f'http://{AWS_IP}:8983/solr/{core}/select?q=text_en:{textValue}%20OR%20text_de:{textValue}%20OR%20text_ru:{textValue}&fl=id%2Cscore&wt=json&indent=true&rows=20'
-        # inurl = f'http://{AWS_IP}:8983/solr/{core}/select?q=text_en:{textValue}%20OR%20text_de:{textValue}%20OR%20text_ru:{textValue}&fl=id%2Cscore&wt=json&indent=true&rows=872'
-        print('>>>>>>>>>>>>>>>>>>>>>>>.')
-        print(inurl)
+        ##LUCENE
+        # inurl = f'http://{AWS_IP}:8983/solr/{core}/select?q=text_en:{textValue}%20OR%20text_de:{textValue}%20OR%20text_ru:{textValue}&fl=id%2Cscore&wt=json&indent=true&rows=20'
+        # DISMAX
+        inurl = f'http://{AWS_IP}:8983/solr/{core}/select?q={textValue}&q.op=OR&defType=dismax&qf=text_en%20text_ru%20text_de&fl=id%2Cscore&wt=json&indent=true&rows=20'
 
         if train == True:
             outfn = f'trec_input_{IRModel}.txt'
